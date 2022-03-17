@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.corvodev.movies20221.R
 import com.corvodev.movies20221.databinding.CardViewItemMovieBinding
+import com.corvodev.movies20221.server.model.Movie
+import com.squareup.picasso.Picasso
 
 class MoviesAdapter(
     private val moviesList: ArrayList<Movie>,
@@ -19,6 +21,7 @@ class MoviesAdapter(
     override fun onBindViewHolder(holder: MoviesAdapter.MovieViewHolder, position: Int) {
         val movie = moviesList[position]
         holder.bindMovie(movie)
+        holder.itemView.setOnClickListener{ onItemClicked(moviesList[position])}
     }
 
     fun appendItems(newList: ArrayList<Movie>) {
@@ -33,6 +36,12 @@ class MoviesAdapter(
         private val binding = CardViewItemMovieBinding.bind(itemView)
 
         fun bindMovie(movie: Movie) {
+            with(binding){
+                movieTitleTextView.text = movie.title
+                releaseDateExampleTextView.text = movie.releaseDate
+                voteAverageExampleTextView.text = movie.voteAverage.toString()
+                Picasso.get().load("https://image.tmdb.org/t/p/w500"+movie.posterPath).into(posterImageView)
+            }
 
         }
     }

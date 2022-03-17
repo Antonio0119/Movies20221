@@ -6,27 +6,35 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import com.corvodev.movies20221.R
+import com.corvodev.movies20221.databinding.FragmentDetailBinding
+import com.corvodev.movies20221.server.model.Movie
+import com.squareup.picasso.Picasso
 
 class DetailFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = DetailFragment()
+    private lateinit var detailBinding: FragmentDetailBinding
+    private lateinit var detailViewModel: DetailViewModel
+    private val args: DetailFragmentArgs by navArgs()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        detailBinding = FragmentDetailBinding.inflate(inflater, container, false)
+        detailViewModel = ViewModelProvider(this) [DetailViewModel::class.java]
+        return detailBinding.root
     }
 
-    private lateinit var viewModel: DetailViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val movie: Movie = args.movie
+        with(detailBinding){
+            movieTitleTextView.text = movie.title
+            releaseDateExampleTextView.text = movie.releaseDate
+            voteAverageExampleTextView.text = movie.voteAverage.toString()
+            Picasso.get().load("https://image.tmdb.org/t/p/w500"+movie.posterPath).into(posterImageView)
+            summaryTextView.text = movie.overview
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_detail, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
-        // TODO: Use the ViewModel
+        }
     }
 
 }
